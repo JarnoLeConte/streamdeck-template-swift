@@ -1,0 +1,29 @@
+{
+  "Actions": [
+    {
+      "Icon": "images/ActionIcon",
+      "Name": "Demo Action",
+      "SupportedInMultiActions": false,
+      "Tooltip": "This is the default action.",
+      "UUID": "com.companyname.pluginname.action"
+    }
+  ],
+  "SDKVersion": 2,
+  "Author": "Jarno Le Conté",
+  "CodePath": "Plugin",
+  "Description": "Template to start of creating a new Stream Deck plugin in Swift",
+  "Name": "Plugin template",
+  "Icon": "images/PluginIcon",
+  "URL": "https://github.com/JarnoLeConte/streamdeck-template-swift",
+  "Version": "1.0",
+  "OS": [
+    {
+        "Platform": "mac",
+        "MinimumVersion" : "10.11"
+    }
+  ],
+  "Software":
+    {
+        "MinimumVersion" : "4.3"
+    }
+}
