@@ -5,7 +5,16 @@
       "Name": "Demo Action",
       "SupportedInMultiActions": false,
       "Tooltip": "This is the default action.",
-      "UUID": "com.companyname.pluginname.action"
+      "UUID": "com.companyname.pluginname.action",
+      "States": [
+        {
+          "Image": "images/ActionIcon",
+          "TitleAlignment": "bottom",
+          "FontSize": "11",
+          "Title": "",
+          "ShowTitle": true
+        }
+      ]
     }
   ],
   "SDKVersion": 2,
@@ -15,6 +24,7 @@
   "Name": "Plugin template",
   "Icon": "images/PluginIcon",
   "URL": "https://github.com/JarnoLeConte/streamdeck-template-swift",
+  "PropertyInspectorPath": "pi.html",
   "Version": "1.0",
   "OS": [
     {
