@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setSettings:(NSDictionary *)inSettings forContext:(id)inContext;
 -(void)setState:(NSNumber *)inState forContext:(id)inContext;
 -(void)logMessage:(NSString *)inMessage;
+-(void)sendToPropertyInspector:(NSDictionary *)inPayload forContext:(id)inContext;
 
 @end
 
