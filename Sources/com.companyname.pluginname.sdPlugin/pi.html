@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>com.companyname.pluginname</title>
+    <link rel="stylesheet" href="sdpi.css">
+    <style>
+    </style>
+</head>
+
+<body>
+    <div class="sdpi-wrapper">
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Sample parameter</div>
+            <input class="sdpi-item-value" id="sampleParam" value="" placeholder="Sample parameter">
+        </div>
+
+        <div class="sdpi-item">            
+            <div class="sdpi-item-label">Send to plugin demo</div>
+            <button class="sdpi-item-value" id="btnSendToPlugin">Clear sample param</button>
+        </div>
+
+    </div>
+
+     <script>
+        var websocket = null,
+        uuid = null,
+        actionInfo = {};
+
+        function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
+            uuid = inUUID;
+
+            actionInfo = JSON.parse(inActionInfo);
+            websocket = new WebSocket('ws://localhost:' + inPort);
+
+            websocket.onopen = function () {
+                var json = {
+                    event:  inRegisterEvent,
+                    uuid:   inUUID
+                };
+                websocket.send(JSON.stringify(json));
+            }
+            
+            websocket.onmessage = function( evt ) {
+                var jsonObj = JSON.parse(evt.data);
+
+                var event = jsonObj['event'];
+
+                if (event === 'sendToPropertyInspector') {
+                    if ( jsonObj.payload.hasOwnProperty( 'command' ) ) {
+                        if (jsonObj.payload.command == 'updateSampleParam') {
+                            //document.getElementById('dbgMessages').value = jsonObj.payload.message + '\r' + document.getElementById('dbgMessages').value;
+                            document.getElementById('sampleParam').value = jsonObj.payload.message;
+                            saveActionSettings()
+                        } else {
+                            if (jsonObj.payload.command == 'clearSampleParam') {
+                                document.getElementById('sampleParam').value = '';
+                                saveActionSettings()
+                            }
+                        }                    
+                    }
+                }
+            }
+            initValues();
+        }
+
+        function initValues( ) {
+            var settings = actionInfo.payload.settings ;
+
+            if ( settings.hasOwnProperty('sampleParam') ) {
+                document.getElementById('sampleParam').value = settings.sampleParam;
+            }
+        }
+
+         function saveActionSettings( ) {
+
+            var json = {
+                'event' : 'setSettings',
+                'context' : uuid ,
+                'payload' : {
+                    'sampleParam' : document.getElementById('sampleParam').value
+                }
+            };
+            websocket.send(JSON.stringify(json));
+        }
+
+        function sendToPlugin( ) {
+            var json = {
+                'action' : actionInfo.action ,
+                'event' : 'sendToPlugin',
+                'context' : uuid ,
+                'payload' : {
+                    'command' : 'clear-sample-param'
+                }
+            };
+            websocket.send(JSON.stringify(json));
+        }
+
+        document.getElementById('sampleParam').addEventListener('input', saveActionSettings ) ;             
+        document.getElementById('btnSendToPlugin').addEventListener('click' , sendToPlugin );
+     </script>
+</body>
+</html>

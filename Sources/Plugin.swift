@@ -17,11 +17,17 @@ public class Plugin: NSObject, ESDEventsProtocol {
     }
     
     public func keyDown(forAction action: String, withContext context: Any, withPayload payload: [AnyHashable : Any], forDevice deviceID: String) {
-        // Nothing to do
+        
+        // Provided for demonstration only
+        let data = [ "command": "updateSampleParam", "message" : "keyDown" ]
+        connectionManager?.send(toPropertyInspector: data, forContext: context)
     }
     
     public func keyUp(forAction action: String, withContext context: Any, withPayload payload: [AnyHashable : Any], forDevice deviceID: String) {
-        // Nothing to do
+        
+        // Provided for demonstration only
+        let data = [ "command": "updateSampleParam", "message" : "keyUp" ]
+        connectionManager?.send(toPropertyInspector: data, forContext: context)
     }
     
     public func willAppear(forAction action: String, withContext context: Any, withPayload payload: [AnyHashable : Any], forDevice deviceID: String) {
@@ -33,6 +39,35 @@ public class Plugin: NSObject, ESDEventsProtocol {
         // Remove the context from the list of known contexts
         knownContexts.removeAll { isEqualContext($0, context) }
     }
+    
+    public func propertyInspectorDidAppear(forAction action: String, withContext context: Any, withPayload payload: [AnyHashable : Any], forDevice deviceID: String) {
+        // Add the context to the list of known contexts
+        knownContexts.append(context);
+        
+        // Provided for demonstration only
+        connectionManager?.setTitle("Appear", withContext: context, withTarget: ESDSDKTarget.HardwareAndSoftware.rawValue)
+    }
+
+    public func propertyInspectorDidDisappear(forAction action: String, withContext context: Any, withPayload payload: [AnyHashable : Any], forDevice deviceID: String) {
+        // Add the context to the list of known contexts
+        knownContexts.append(context);
+        
+        // Provided for demonstration only
+        connectionManager?.setTitle("Disappear", withContext: context, withTarget: ESDSDKTarget.HardwareAndSoftware.rawValue)
+    }
+
+    public func sendToPlugin(forAction action: String, withContext context: Any, withPayload payload: [AnyHashable : Any], forDevice deviceID: String) {
+        // Nothing to do
+        
+        // Provided for demonstration only
+        // We have received a command "clear-sample-param" from PI, and now we send a command "clearSampleParam" back to it
+        let command = payload["command"] as? String;
+        if (command == "clear-sample-param") {
+            let data = [ "command": "clearSampleParam" ]
+            connectionManager?.send(toPropertyInspector: data, forContext: context)
+        }
+    }
+
     public func deviceDidConnect(_ deviceID: String, withDeviceInfo deviceInfo: [AnyHashable : Any]) {
         // Nothing to do
     }
